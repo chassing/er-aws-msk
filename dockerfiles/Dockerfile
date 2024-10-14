@@ -1,4 +1,4 @@
-FROM quay.io/app-sre/er-base-cdktf-aws:0.1.0
+FROM quay.io/app-sre/er-base-cdktf-aws:0.2.0
 # CDKTF providers need a specific Terraform-aws-provider
 # Check this URL and set both provider versions accordingly
 # Here and in the requirements file.
@@ -31,6 +31,4 @@ ARG CODE_ROOT
 COPY $CODE_ROOT ./$CODE_ROOT
 
 # cdktf files
-COPY cdktf.json entrypoint.sh ./
-
-ENTRYPOINT [ "./entrypoint.sh" ]
+COPY cdktf.json ./
