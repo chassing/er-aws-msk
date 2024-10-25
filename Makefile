@@ -5,6 +5,7 @@ format:
 	uv run ruff check
 	uv run ruff format
 
+
 .PHONY: test
 test:
 	unset UV_FROZEN && uv lock --locked
