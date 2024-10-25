@@ -1,6 +1,6 @@
 {
   "language": "python",
-  "app": "python3 -m er_aws_msk",
+  "app": "er-aws-msk",
   "projectId": "ec09b27b-cc19-4daf-9289-ffbccf2579e9",
   "sendCrashReports": "false",
   "terraformProviders": [],
