@@ -18,7 +18,7 @@ RUN mkdir -p ${TF_PROVIDER_RANDOM_PATH} && \
 COPY pyproject.toml uv.lock ./
 RUN uv sync --no-install-project --no-dev
 
-COPY README.md Makefile cdktf.json validate_plan.py ./
+COPY README.md Makefile cdktf.json validate_plan.py entrypoint.sh ./
 
 # the source code
 COPY er_aws_msk ./er_aws_msk
@@ -26,9 +26,15 @@ COPY er_aws_msk ./er_aws_msk
 # Sync the project
 RUN uv sync --no-editable --no-dev
 
+# Empty /tmp to avoid linux permission issues if running this image on OpenShift
+RUN rm -rf /tmp/*
+
 FROM prod AS test
 # install test dependencies
 RUN uv sync --no-editable
 
 COPY tests ./tests
 RUN make test
+
+# Empty /tmp again because the test stage might have created files there, e.g. JSII_RUNTIME_PACKAGE_CACHE_ROOT
+RUN rm -rf /tmp/*

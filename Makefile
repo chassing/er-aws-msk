@@ -8,6 +8,8 @@ format:
 
 .PHONY: test
 test:
+	# test /tmp is empty
+	[ -z "$(shell ls -A /tmp)" ]
 	unset UV_FROZEN && uv lock --locked
 	uv run ruff check --no-fix
 	uv run ruff format --check
