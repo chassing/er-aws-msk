@@ -35,7 +35,7 @@ CDKTF_OUT_DIR="$ER_OUTDIR/stacks/CDKTF"
 TERRAFORM_CMD="terraform -chdir=$CDKTF_OUT_DIR"
 
 # CDKTF init forces the provider re-download to calculate
-# Other platform provider SHAs. USing terraform to init the configuration avoids it
+# other platform provider SHAs. Using terraform to init the configuration avoids it.
 # This shuold be reevaluated in the future.
 # https://github.com/hashicorp/terraform-cdk/issues/3622
 cdktf synth --output "$ER_OUTDIR"
