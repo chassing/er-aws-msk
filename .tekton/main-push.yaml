@@ -8,10 +8,10 @@ metadata:
     pipelinesascode.tekton.dev/max-keep-runs: "20"
     pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch == "main"
   labels:
-    appstudio.openshift.io/application: r-aws-msk-main
-    appstudio.openshift.io/component: r-aws-msk-main
+    appstudio.openshift.io/application: er-aws-msk-main
+    appstudio.openshift.io/component: er-aws-msk-main
     pipelines.appstudio.openshift.io/type: build
-  name: r-aws-msk-main-on-push
+  name: er-aws-msk-main-on-push
   namespace: app-sre-tenant
 spec:
   params:
@@ -20,7 +20,7 @@ spec:
   - name: revision
     value: '{{revision}}'
   - name: output-image
-    value: quay.io/redhat-user-workloads/app-sre-tenant/r-aws-msk-main/r-aws-msk-main:{{revision}}
+    value: quay.io/redhat-user-workloads/app-sre-tenant/er-aws-msk-main/er-aws-msk-main:{{revision}}
   - name: dockerfile
     value: Dockerfile
   - name: path-context
