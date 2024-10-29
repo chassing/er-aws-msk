@@ -1,5 +1,5 @@
 # Until https://issues.redhat.com/browse/RELEASE-993 is resolved, we need to use :SHA instead of :VERSION tags
-FROM quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-aws-main/er-base-cdktf-aws-main:3ab182e AS prod
+FROM quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-aws-main/er-base-cdktf-aws-main:4b2bec1 AS prod
 
 # keep in sync with pyproject.toml
 LABEL konflux.additional-tags="0.2.0"
@@ -18,7 +18,7 @@ RUN mkdir -p ${TF_PROVIDER_RANDOM_PATH} && \
 COPY pyproject.toml uv.lock ./
 RUN uv sync --no-install-project --no-dev
 
-COPY README.md Makefile cdktf.json validate_plan.py entrypoint.sh ./
+COPY README.md Makefile cdktf.json validate_plan.py ./
 
 # the source code
 COPY er_aws_msk ./er_aws_msk
