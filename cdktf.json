@@ -1,10 +1,7 @@
 {
   "language": "python",
   "app": "er-aws-msk",
-  "projectId": "ec09b27b-cc19-4daf-9289-ffbccf2579e9",
   "sendCrashReports": "false",
-  "terraformProviders": [],
-  "terraformModules": [],
-  "codeMakerOutput": "imports",
-  "context": {}
+  "terraformProviders": ["random@ = 3.6.3", "aws@ = 5.50.0"],
+  "projectId": "49778ce7-523f-482c-a0e7-bad21132b58c"
 }

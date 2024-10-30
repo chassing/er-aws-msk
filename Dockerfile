@@ -1,40 +1,59 @@
 # Until https://issues.redhat.com/browse/RELEASE-993 is resolved, we need to use :SHA instead of :VERSION tags
-FROM quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-aws-main/er-base-cdktf-aws-main:4b2bec1 AS prod
+# FROM quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:ae814ab AS builder
+FROM quay.io/redhat-user-workloads/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:cdktf-0.20.9-tf-1.6.6-py-3.11-v0.3.0 AS builder
+COPY --from=ghcr.io/astral-sh/uv:0.4.28@sha256:dbd4acba8bfc42ae057ec4cfd65a980c516266e55bb045931873bd2bee531a71 /uv /bin/uv
 
 # keep in sync with pyproject.toml
 LABEL konflux.additional-tags="0.2.0"
 
-# Keep in sync with the 'cdktf-cdktf-provider-random' version in pyproject.toml
-ENV TF_PROVIDER_RANDOM_VERSION="3.6.3"
-ENV TF_PROVIDER_RANDOM_PATH="${TF_PLUGIN_CACHE}/registry.terraform.io/hashicorp/random/${TF_PROVIDER_RANDOM_VERSION}/linux_amd64"
+COPY cdktf.json ./
+# Download all necessary CDKTF providers and build the python cdktf modules.
+# The python modules must be stored in the .gen directory because cdktf needs them there.
+RUN cdktf-provider-sync .gen
 
-RUN mkdir -p ${TF_PROVIDER_RANDOM_PATH} && \
-    curl -sfL https://releases.hashicorp.com/terraform-provider-random/${TF_PROVIDER_RANDOM_VERSION}/terraform-provider-random_${TF_PROVIDER_RANDOM_VERSION}_linux_amd64.zip \
-    -o /tmp/package-${TF_PROVIDER_RANDOM_VERSION}.zip && \
-    unzip /tmp/package-${TF_PROVIDER_RANDOM_VERSION}.zip -d ${TF_PROVIDER_RANDOM_PATH}/ && \
-    rm /tmp/package-${TF_PROVIDER_RANDOM_VERSION}.zip
+# Python and UV related variables
+ENV \
+    # compile bytecode for faster startup
+    UV_COMPILE_BYTECODE="true" \
+    # disable uv cache. it doesn't make sense in a container
+    UV_NO_CACHE=true \
+    UV_NO_PROGRESS=true
 
-# Install dependencies
 COPY pyproject.toml uv.lock ./
-RUN uv sync --no-install-project --no-dev
-
-COPY README.md Makefile cdktf.json validate_plan.py ./
+# Test lock file is up to date
+RUN uv lock --locked
+# Install dependencies
+RUN uv sync --frozen --no-group dev --no-install-project --python /usr/bin/python3
 
 # the source code
+COPY README.md validate_plan.py ./
 COPY er_aws_msk ./er_aws_msk
-
 # Sync the project
-RUN uv sync --no-editable --no-dev
+RUN uv sync --frozen --no-group dev
 
-# Empty /tmp to avoid linux permission issues if running this image on OpenShift
-RUN rm -rf /tmp/*
+FROM er-base-cdktf:test AS prod
+# get cdktf providers
+COPY --from=builder ${TF_PLUGIN_CACHE_DIR} ${TF_PLUGIN_CACHE_DIR}
+# get our app with the dependencies
+COPY --from=builder ${APP} ${APP}
+
+ENV \
+    # Use the virtual environment
+    PATH="${APP}/.venv/bin:${PATH}" \
+    # cdktf python modules path
+    PYTHONPATH="$APP/.gen"
 
 FROM prod AS test
-# install test dependencies
-RUN uv sync --no-editable
+COPY --from=ghcr.io/astral-sh/uv:0.4.28:sha256:dbd4acba8bfc42ae057ec4cfd65a980c516266e55bb045931873bd2bee531a71 /uv /bin/uv
 
+# install test dependencies
+RUN uv sync --frozen
+
+COPY Makefile ./
 COPY tests ./tests
+
 RUN make test
 
 # Empty /tmp again because the test stage might have created files there, e.g. JSII_RUNTIME_PACKAGE_CACHE_ROOT
+# and we want to run this test image in the dev environment
 RUN rm -rf /tmp/*

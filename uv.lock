@@ -110,38 +110,6 @@ wheels = [
 ]
 
 [[package]]
-name = "cdktf-cdktf-provider-aws"
-version = "19.28.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "cdktf" },
-    { name = "constructs" },
-    { name = "jsii" },
-    { name = "publication" },
-    { name = "typeguard" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/47/d1/d18e17cea9799735682a7aec1be1e9835ec9b8ef770340e639e818f8c2a9/cdktf-cdktf-provider-aws-19.28.0.tar.gz", hash = "sha256:1631252c00efac360ecf517132f399297cfe421387743525d3ec0503ccb8c2ce", size = 46314350 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a7/76/78c0c25688b4d4a9aeac55ac245be251f6c851ddb24636f61c70d61c5b8c/cdktf_cdktf_provider_aws-19.28.0-py3-none-any.whl", hash = "sha256:95bc13a0299ba733b736e9e2293e855ac3434db9be2e5670b32fb0ef6fcef591", size = 48973388 },
-]
-
-[[package]]
-name = "cdktf-cdktf-provider-random"
-version = "11.0.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "cdktf" },
-    { name = "constructs" },
-    { name = "jsii" },
-    { name = "publication" },
-    { name = "typeguard" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/93/13/1534bd8a76b2c5e70f912b39943a5620083a329c52672cb4cb21736edaa7/cdktf_cdktf_provider_random-11.0.3.tar.gz", hash = "sha256:3ae462ea67f5017774672960d1ec46d2635827be7cbc07e16d5465d0f87897e0", size = 98119 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/84/ed/d74a0cd295357792b21fb5bada3573c5fce300db7ac2fea8da8e294fdc0b/cdktf_cdktf_provider_random-11.0.3-py3-none-any.whl", hash = "sha256:b23c401bbb05153b70d43ba010b264a7bcfd3cc235ad7b90b9e1f1d8bdf77df6", size = 111954 },
-]
-
-[[package]]
 name = "colorama"
 version = "0.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -223,13 +191,12 @@ version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "boto3" },
-    { name = "cdktf-cdktf-provider-aws" },
-    { name = "cdktf-cdktf-provider-random" },
+    { name = "cdktf" },
     { name = "external-resources-io" },
     { name = "pydantic" },
 ]
 
-[package.dev-dependencies]
+[package.dependency-groups]
 dev = [
     { name = "boto3-stubs-lite", extra = ["ec2"] },
     { name = "mypy" },
@@ -240,14 +207,13 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "boto3", specifier = ">=1.35.47" },
-    { name = "cdktf-cdktf-provider-aws", specifier = "==19.28.0" },
-    { name = "cdktf-cdktf-provider-random", specifier = "==11.0.3" },
+    { name = "boto3", specifier = "~=1.35.47" },
+    { name = "cdktf", specifier = "==0.20.9" },
     { name = "external-resources-io", specifier = "~=0.3.2" },
     { name = "pydantic", specifier = "~=2.8.0" },
 ]
 
-[package.metadata.requires-dev]
+[package.metadata.dependency-groups]
 dev = [
     { name = "boto3-stubs-lite", extras = ["ec2"], specifier = ">=1.35.46" },
     { name = "mypy", specifier = "~=1.13" },
