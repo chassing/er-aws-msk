@@ -39,5 +39,5 @@ build:
 dev:
 	uv sync --python $(PYTHON_VERSION)
 	# Prepare local development environment
-	$(CONTAINER_ENGINE) run --rm -it -v $(PWD)/:/home/app/src -v $(PWD)/.gen:/cdktf-providers:z quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:cdktf-0.20.9-tf-1.6.6-py-3.11-v0.3.0 cdktf-provider-sync /cdktf-providers
+	$(CONTAINER_ENGINE) run --rm -it -v $(PWD)/:/home/app/src -v $(PWD)/.gen:/cdktf-providers:z quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:latest cdktf-provider-sync /cdktf-providers
 	cp sitecustomize.py $(SITE_PACKAGES_DIR)
