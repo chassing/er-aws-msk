@@ -44,7 +44,7 @@ ENV \
     PYTHONPATH="$APP/.gen"
 
 FROM prod AS test
-COPY --from=ghcr.io/astral-sh/uv:0.4.28:sha256:dbd4acba8bfc42ae057ec4cfd65a980c516266e55bb045931873bd2bee531a71 /uv /bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.4.28@sha256:dbd4acba8bfc42ae057ec4cfd65a980c516266e55bb045931873bd2bee531a71 /uv /bin/uv
 
 # install test dependencies
 RUN uv sync --frozen
