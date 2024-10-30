@@ -33,6 +33,14 @@ spec:
   - name: build-platforms
     value:
     - linux/amd64
+  taskRunSpecs:
+  - pipelineTaskName: build-images
+    computeResources:
+      requests:
+        cpu: '1'
+        memory: 12Gi
+      limits:
+        memory: 12Gi
   pipelineRef:
     resolver: git
     params:
