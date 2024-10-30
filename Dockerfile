@@ -31,7 +31,7 @@ COPY er_aws_msk ./er_aws_msk
 # Sync the project
 RUN uv sync --frozen --no-group dev
 
-FROM er-base-cdktf:test AS prod
+FROM quay.io/redhat-user-workloads/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:cdktf-0.20.9-tf-1.6.6-py-3.11-v0.3.0 AS prod
 # get cdktf providers
 COPY --from=builder ${TF_PLUGIN_CACHE_DIR} ${TF_PLUGIN_CACHE_DIR}
 # get our app with the dependencies
