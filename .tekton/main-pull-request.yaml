@@ -38,9 +38,9 @@ spec:
     computeResources:
       requests:
         cpu: '1'
-        memory: 12Gi
+        memory: 16Gi
       limits:
-        memory: 12Gi
+        memory: 16Gi
   pipelineRef:
     resolver: git
     params:
