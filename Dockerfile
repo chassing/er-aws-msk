@@ -1,7 +1,7 @@
 # Until https://issues.redhat.com/browse/RELEASE-993 is resolved, we need to use :SHA instead of :VERSION tags
-# FROM quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:ae814ab AS builder
-FROM quay.io/redhat-user-workloads/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:cdktf-0.20.9-tf-1.6.6-py-3.11-v0.3.0 AS builder
-COPY --from=ghcr.io/astral-sh/uv:0.4.28@sha256:dbd4acba8bfc42ae057ec4cfd65a980c516266e55bb045931873bd2bee531a71 /uv /bin/uv
+# 24e2b62 == cdktf-0.20.9-tf-1.6.6-py-3.11-v0.3.0
+FROM quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:24e2b62 AS builder
+COPY --from=ghcr.io/astral-sh/uv:0.4.29@sha256:ebb10c5178c7a357d80527f3371e7038561c26234e8a0bb323ea1f2ce8a694b7 /uv /bin/uv
 
 # keep in sync with pyproject.toml
 LABEL konflux.additional-tags="0.2.0"
@@ -31,7 +31,7 @@ COPY er_aws_msk ./er_aws_msk
 # Sync the project
 RUN uv sync --frozen --no-group dev
 
-FROM quay.io/redhat-user-workloads/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:cdktf-0.20.9-tf-1.6.6-py-3.11-v0.3.0 AS prod
+FROM quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:24e2b62 AS prod
 # get cdktf providers
 COPY --from=builder ${TF_PLUGIN_CACHE_DIR} ${TF_PLUGIN_CACHE_DIR}
 # get our app with the dependencies
@@ -44,7 +44,7 @@ ENV \
     PYTHONPATH="$APP/.gen"
 
 FROM prod AS test
-COPY --from=ghcr.io/astral-sh/uv:0.4.28@sha256:dbd4acba8bfc42ae057ec4cfd65a980c516266e55bb045931873bd2bee531a71 /uv /bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.4.29@sha256:ebb10c5178c7a357d80527f3371e7038561c26234e8a0bb323ea1f2ce8a694b7 /uv /bin/uv
 
 # install test dependencies
 RUN uv sync --frozen

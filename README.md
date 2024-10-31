@@ -12,6 +12,20 @@ External Resources module to provision and manage MSK instances in AWS with app-
 * Python 3.11
 * Pydantic
 
+## Development
+
+> :warning: **Attention**
+>
+> The CDKTF Python module generation needs at least 12GB of memory and takes around 5 minutes to complete.
+
+Prepare your lcoal development environment:
+
+```bash
+make dev
+```
+
+See the `Makefile` for more details.
+
 ## Debugging
 
 To debug and run the module locally, run the following commands:
