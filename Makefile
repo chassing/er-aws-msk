@@ -1,5 +1,3 @@
-# Keep in sync with the Python version in the Dockerfile
-PYTHON_VERSION ?= 3.11
 SITE_PACKAGES_DIR ?= $(shell .venv/bin/python3 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')
 CONTAINER_ENGINE ?= $(shell which podman >/dev/null 2>&1 && echo podman || echo docker)
 
@@ -37,7 +35,7 @@ build:
 .PHONY: dev
 dev:
 	# Prepare local development environment
-	uv sync --python $(PYTHON_VERSION)
+	uv sync
 	# The CDKTF python module generation needs at least 12GB of memory!
 	$(CONTAINER_ENGINE) run --rm -it -v $(PWD)/:/home/app/src -v $(PWD)/.gen:/cdktf-providers:z --entrypoint cdktf-provider-sync quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:latest /cdktf-providers
 	cp sitecustomize.py $(SITE_PACKAGES_DIR)
