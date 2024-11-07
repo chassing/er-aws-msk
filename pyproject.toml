@@ -5,7 +5,7 @@ description = "ERv2 module for managing AWS msk clusters"
 authors = [{ name = "AppSRE", email = "sd-app-sre@redhat.com" }]
 license = { text = "Apache 2.0" }
 readme = "README.md"
-requires-python = ">= 3.11"
+requires-python = "~= 3.11.0"
 dependencies = [
     "boto3 ~=1.35.47",
     "cdktf ==0.20.9",
