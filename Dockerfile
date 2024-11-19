@@ -1,6 +1,6 @@
-FROM quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:cdktf-0.20.9-tf-1.6.6-py-3.11-v0.3.0@sha256:c58b07aaf0c8dac00b5a1899f36ca60758c1ef05ceb10a3bcb08ce3324e9795b AS base
+FROM quay.io/redhat-services-prod/app-sre-tenant/er-base-cdktf-main/er-base-cdktf-main:cdktf-0.20.9-tf-1.6.6-py-3.11-v0.4.0@sha256:7cbab92df7a7a12bc018dfd730d72dceaf196a02d40034d8d4702ca84fcb7d7d AS base
 # keep in sync with pyproject.toml
-LABEL konflux.additional-tags="0.2.0"
+LABEL konflux.additional-tags="0.2.1"
 
 FROM base AS builder
 COPY --from=ghcr.io/astral-sh/uv:0.5.2@sha256:ab5cd8c7946ae6a359a9aea9073b5effd311d40a65310380caae938a1abf55da /uv /bin/uv
