@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 import logging
-import os
 import sys
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
 from boto3 import Session
-from botocore.config import Config
+from botocore.config import Config as BotocoreConfig
+from external_resources_io.config import Config
 from external_resources_io.input import parse_model, read_input_from_file
+from external_resources_io.log import setup_logging
 from external_resources_io.terraform import (
     Action,
     ResourceChange,
@@ -22,9 +23,7 @@ else:
 
 from er_aws_msk.app_interface_input import AppInterfaceInput
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-logging.getLogger("botocore").setLevel(logging.ERROR)
 
 MIN_SUBNETS = 3
 
@@ -34,7 +33,7 @@ class AWSApi:
 
     def __init__(self, config_options: Mapping[str, Any]) -> None:
         self.session = Session()
-        self.config = Config(**config_options)
+        self.config = BotocoreConfig(**config_options)
 
     @property
     def ec2_client(self) -> EC2Client:
@@ -137,14 +136,10 @@ class MskPlanValidator:
 
 
 if __name__ == "__main__":
-    app_interface_input = parse_model(
-        AppInterfaceInput,
-        read_input_from_file(
-            file_path=os.environ.get("ER_INPUT_FILE", "/inputs/input.json"),
-        ),
-    )
+    setup_logging()
+    app_interface_input = parse_model(AppInterfaceInput, read_input_from_file())
     logger.info("Running MSK terraform plan validation")
-    plan = TerraformJsonPlanParser(plan_path=sys.argv[1])
+    plan = TerraformJsonPlanParser(plan_path=Config().plan_file_json)
     validator = MskPlanValidator(plan, app_interface_input)
     if not validator.validate():
         logger.error(validator.errors)

@@ -1,10 +1,7 @@
 import pytest
-from cdktf import Testing
 from external_resources_io.input import parse_model
 
 from er_aws_msk.app_interface_input import AppInterfaceInput
-
-Testing.__test__ = False
 
 
 @pytest.fixture
