@@ -69,7 +69,7 @@ resource "aws_secretsmanager_secret_policy" "this" {
 }
 
 resource "aws_msk_scram_secret_association" "this" {
-  count = length(var.scram_users) > 0 && var.client_authentication != null && var.client_authentication.sasl.scram ? 1 : 0
+  count = length(var.scram_users) > 0 && try(var.client_authentication.sasl.scram, false) ? 1 : 0
 
   cluster_arn     = aws_msk_cluster.this.arn
   secret_arn_list = [for secret in aws_secretsmanager_secret.this : secret.arn]
