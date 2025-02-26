@@ -170,4 +170,6 @@ cdktf.out
 input.json
 credentials
 tmp/
-.gen
+.terraform
+terraform/backend.tf
+terraform/*.json

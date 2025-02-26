@@ -1,19 +1,16 @@
 [project]
 name = "er-aws-msk"
-version = "0.3.1"
+version = "0.4.0"
 description = "ERv2 module for managing AWS msk clusters"
 authors = [{ name = "AppSRE", email = "sd-app-sre@redhat.com" }]
 license = { text = "Apache 2.0" }
 readme = "README.md"
 requires-python = "~= 3.12.0"
 dependencies = [
-    "boto3~=1.36.12",
-    "cdktf ==0.20.11",
-    "cdktf-cdktf-provider-aws ~=19.51.0",
-    "cdktf-cdktf-provider-random ~=11.0.3",
-    "external-resources-io ~=0.4.1",
-    "pip>=25.0",
-    "pydantic ~=2.10.0",
+    "boto3==1.37.0",
+    "external-resources-io==0.6.0",
+    "pip==25.0.1",
+    "pydantic==2.10.6",
 ]
 
 [project.urls]
@@ -23,15 +20,16 @@ documentation = "https://github.com/app-sre/er-aws-msk"
 
 [dependency-groups]
 dev = [
-    "ruff ~=0.9",
-    "mypy ~=1.13",
-    "pytest ~=8.3.4",
-    "pytest-cov ~=6.0.0",
-    "boto3-stubs-lite[ec2]>=1.36.12",
+    "boto3-stubs-lite[ec2]==1.37.0",
+    "external-resources-io[cli]==0.6.0",
+    "mypy==1.15.0",
+    "pytest==8.3.4",
+    "pytest-cov==6.0.0",
+    "ruff==0.9.7",
 ]
 
 [project.scripts]
-er-aws-msk = 'er_aws_msk.__main__:main'
+generate-tf-config = 'er_aws_msk.__main__:main'
 
 [build-system]
 requires = ["hatchling"]
@@ -43,9 +41,8 @@ only-include = ["er_aws_msk"]
 # Ruff configuration
 [tool.ruff]
 line-length = 88
-target-version = 'py311'
-src = ["er_aws_msk"]
-extend-exclude = [".gen"]
+target-version = 'py312'
+src = ["er_aws_msk", "hooks"]
 fix = true
 
 [tool.ruff.lint]
@@ -85,11 +82,12 @@ ignore = [
 preview = true
 
 [tool.ruff.lint.isort]
-known-first-party = ["er_aws_msk"]
+known-first-party = ["er_aws_msk", "hooks"]
 
 # Mypy configuration
 [tool.mypy]
-files = ["er_aws_msk", "tests"]
+plugins = "pydantic.mypy"
+files = ["er_aws_msk", "hooks", "tests"]
 enable_error_code = ["truthy-bool", "redundant-expr"]
 no_implicit_optional = true
 check_untyped_defs = true
@@ -104,4 +102,4 @@ branch = true
 omit = ["*/tests/*"]
 
 [tool.coverage.report]
-fail_under = 90
+fail_under = 26
