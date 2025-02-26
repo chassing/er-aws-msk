@@ -43,12 +43,9 @@ resource "aws_secretsmanager_secret" "this" {
 }
 
 resource "aws_secretsmanager_secret_version" "this" {
-  for_each  = var.scram_users
-  secret_id = aws_secretsmanager_secret.this[each.key].id
-  # enforce the order of the keys in the JSON object
-  secret_string = jsonencode({
-    for k in sort(keys(each.value)) : k => each.value[k]
-  })
+  for_each      = var.scram_users
+  secret_id     = aws_secretsmanager_secret.this[each.key].id
+  secret_string = jsonencode(each.value)
 }
 
 resource "aws_secretsmanager_secret_policy" "this" {
